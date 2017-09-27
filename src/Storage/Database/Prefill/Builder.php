@@ -70,6 +70,20 @@ class Builder
                 continue;
             }
 
+            // Singletons are always limited to 1 item max.
+            if ($this->storage->getContentType($contentTypeName)['singleton']) {
+                $count = 1;
+
+                if ($existingCount > 0) {
+                    $response->setPath('warnings/' . $contentTypeName, Trans::__(
+                        'page.prefill.skipped-singleton',
+                        ['%key%' => $contentTypeName]
+                    ));
+
+                    continue;
+                }
+            }
+
             // Take the current amount of items into consideration, when adding more.
             $createCount = $canExceedMax ? $count : $count - $existingCount;
             if ($createCount < 1) {
