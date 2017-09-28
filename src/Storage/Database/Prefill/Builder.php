@@ -29,11 +29,12 @@ class Builder
      * @param callable      $generatorFactory
      * @param int           $maxCount
      */
-    public function __construct(EntityManager $storage, callable $generatorFactory, $maxCount)
+    public function __construct(EntityManager $storage, callable $generatorFactory, $maxCount, $contenttypes)
     {
         $this->storage = $storage;
         $this->generatorFactory = $generatorFactory;
         $this->maxCount = $maxCount;
+        $this->contenttypes = $contenttypes;
     }
 
     /**
@@ -71,7 +72,7 @@ class Builder
             }
 
             // Singletons are always limited to 1 item max.
-            if ($this->storage->getContentType($contentTypeName)['singleton']) {
+            if ($this->contenttypes[$contentTypeName]['singleton']) {
                 $count = 1;
 
                 if ($existingCount > 0) {
